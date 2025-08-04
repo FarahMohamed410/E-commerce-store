@@ -34,7 +34,7 @@ session_start();
             color: #0d6efd;
         }
 
-    
+
         form.d-flex input[type="text"] {
             border-radius: 4px 0 0 4px;
             border: 1px solid #ced4da;
@@ -56,7 +56,7 @@ session_start();
             background-color: #084298;
         }
 
-        
+
         .card {
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
@@ -68,31 +68,31 @@ session_start();
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
 
-       .card-img-top {
-    height: 280px !important; 
-    object-fit: cover;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
+        .card-img-top {
+            height: 280px !important;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
 
-.card-title {
-    font-weight: 700;
-    font-size: 1.25rem; 
-}
+        .card-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
 
-.card-text {
-    color: #555;
-    font-size: 1rem; 
-    height: 80px; 
-    overflow: hidden;
-}
+        .card-text {
+            color: #555;
+            font-size: 1rem;
+            height: 80px;
+            overflow: hidden;
+        }
 
-.price {
-    font-weight: 700;
-    color: #0d6efd;
-    margin-top: 10px;
-    font-size: 1.25rem;
-}
+        .price {
+            font-weight: 700;
+            color: #0d6efd;
+            margin-top: 10px;
+            font-size: 1.25rem;
+        }
 
 
         .sidebar-title {
@@ -169,7 +169,7 @@ session_start();
                         </a>
                     </li>
                     <li class="nav-item nav-link disabled">
-                        Total: 
+                        Total:
                         <?php
                         $total = 0;
                         $cart_query = "SELECT * FROM `cart_details` WHERE ip_address='$get_ip'";
@@ -222,7 +222,7 @@ session_start();
             <div class="col-lg-9 mb-4">
                 <div class="row g-4">
                     <?php
-                
+
                     if (!isset($_GET['category']) && !isset($_GET['brand'])) {
                         $select_query = "SELECT * FROM `products` ORDER BY RAND() LIMIT 12";
                         $result_query = mysqli_query($con, $select_query);
@@ -277,7 +277,14 @@ session_start();
                         while ($row_data = mysqli_fetch_assoc($result_brands)) {
                             $brand_title = htmlspecialchars($row_data['brand_title']);
                             $brand_id = intval($row_data['brand_id']);
-                            echo "<li class='nav-item'><a href='index.php?brand=$brand_id' class='nav-link'>$brand_title</a></li>";
+                            if (isset($_GET['brand']) && $_GET['brand'] == $brand_id) {
+                                $backgroundcolor = '#0d6efd';
+                                $color = 'text-white';
+                            } else {
+                                $backgroundcolor = '';
+                                $color = '';
+                            }
+                             echo "<li class='nav-item' style ='background-color: $backgroundcolor'><a href='index.php?brand=$brand_id' class='nav-link $color'>$brand_title</a></li>";
                         }
                         ?>
                     </ul>
@@ -301,37 +308,36 @@ session_start();
     </div>
 
     <?php
-    function getUserIP()
-    {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            return $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
+        function getUserIP(){
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                return $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                return $_SERVER['REMOTE_ADDR'];
+            }
         }
-    }
     ?>
 
     <?php
-    if (isset($_GET['add_to_cart'])) {
-        $get_ip = getUserIP();
-        $get_product_id = intval($_GET['add_to_cart']);
+        if (isset($_GET['add_to_cart'])) {
+            $get_ip = getUserIP();
+            $get_product_id = intval($_GET['add_to_cart']);
 
-        $select_query = "SELECT * FROM cart_details WHERE ip_address='$get_ip' AND product_id=$get_product_id";
-        $result_query = mysqli_query($con, $select_query);
-        $number_rows = mysqli_num_rows($result_query);
+            $select_query = "SELECT * FROM cart_details WHERE ip_address='$get_ip' AND product_id=$get_product_id";
+            $result_query = mysqli_query($con, $select_query);
+            $number_rows = mysqli_num_rows($result_query);
 
-        if ($number_rows > 0) {
-            echo "<script>alert('This item is already in your cart.')</script>";
-            echo "<script>window.open('index.php','_self')</script>";
-        } else {
-            $insert_query = "INSERT INTO cart_details (product_id, ip_address, quantity) VALUES ('$get_product_id', '$get_ip', 1)";
-            mysqli_query($con, $insert_query);
-            echo "<script>alert('Item added to cart.')</script>";
-            echo "<script>window.open('index.php','_self')</script>";
+            if ($number_rows > 0) {
+                echo "<script>alert('This item is already in your cart.')</script>";
+                echo "<script>window.open('index.php','_self')</script>";
+            } else {
+                $insert_query = "INSERT INTO cart_details (product_id, ip_address, quantity) VALUES ('$get_product_id', '$get_ip', 1)";
+                mysqli_query($con, $insert_query);
+                echo "<script>alert('Item added to cart.')</script>";
+                echo "<script>window.open('index.php','_self')</script>";
+            }
         }
-    }
     ?>
 
     <footer class="footer">
