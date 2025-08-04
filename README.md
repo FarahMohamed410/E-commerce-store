@@ -19,7 +19,13 @@ Built using PHP, HTML, CSS, JavaScript, Bootstrap, and MySQL.
 - User login and registration system  
 - Simulation of an online payment gateway  
 - Responsive design with Bootstrap
- 
+ ## Database Setup
+
+1. Open phpMyAdmin or your preferred MySQL management tool.
+2. Create a new database (e.g., named `mystore_db`).
+3. Import the `mystore.sql` file located inside the `db` folder of the project into the new database.
+4. Update your project's database configuration (e.g., `.env` file) to match the new database credentials.
+
  ## Admin Access
 
 To access the admin dashboard, use the following credentials:
